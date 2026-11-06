@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Builds / caches
+dist/
+dist-ssr/
+build/
+.next/
+.turbo/
+.cache/
+*.tsbuildinfo
+
+# Vite / tooling
+*.local
+
+# Next leftovers (this app is Vite)
+next-env.d.ts
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/

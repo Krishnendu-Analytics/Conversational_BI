@@ -1,0 +1,40 @@
+# Prefer the root docker-compose.yml (api + web + postgres).
+# Kept for backend-only local runs from this folder.
+services:
+  platform-postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: bi
+      POSTGRES_PASSWORD: bi
+      POSTGRES_DB: platform
+    ports:
+      - "5434:5432"
+    volumes:
+      - platform_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bi -d platform"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://bi:bi@platform-postgres:5432/platform
+      CORS_ORIGINS: http://localhost:3000
+    volumes:
+      - ./app:/app/app
+      - ./alembic:/app/alembic
+      - ./alembic.ini:/app/alembic.ini
+    depends_on:
+      platform-postgres:
+        condition: service_healthy
+    command: >
+      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload  --access-log --log-level info
+
+volumes:
+  platform_pg_data:

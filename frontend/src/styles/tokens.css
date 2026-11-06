@@ -1,0 +1,162 @@
+/**
+ * Design tokens. Theme is fully explicit via [data-theme] (set by a boot
+ * script in index.html before first paint — see src/lib/theme.tsx) rather
+ * than @media (prefers-color-scheme), so there is exactly one light block
+ * and one dark override block here, no OS-preference duplication.
+ */
+
+:root {
+  /* ── Surfaces ── */
+  --bg-deep: #fafafa;
+  --surface: #ffffff;
+  --surface-muted: #f4f4f5;
+  --surface-2: var(--surface-muted);
+  --surface-3: #ededef;
+  --hover-surface: #f1f1f3;
+  --panel: #ffffff;
+  --panel-border: var(--line);
+
+  /* ── Borders ── */
+  --line: #e4e4e7;
+  --border: var(--line);
+  --border-subtle: #efeff1;
+
+  /* ── Text ── */
+  --text: #18181b;
+  --muted: #52525b;
+  --text-muted: #71717a;
+  --text-disabled: #a1a1aa;
+
+  /* ── Accent ── */
+  --accent: #4f46e5;
+  --accent-strong: #4338ca;
+  --accent-soft: rgba(79, 70, 229, 0.08);
+
+  /* ── Semantic ── */
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --info: #2563eb;
+  --viz-accent: var(--accent);
+
+  /* ── Chart categorical series (fixed hue order — validated: clears CVD
+     separation, lightness/chroma bands, and contrast checks per the
+     dataviz skill's six-check gate; never reorder or eyeball-substitute) ── */
+  --chart-series-1: #2a78d6; /* blue */
+  --chart-series-2: #eb6834; /* orange */
+  --chart-series-3: #1baf7a; /* aqua */
+  --chart-series-4: #eda100; /* yellow */
+  --chart-series-5: #e87ba4; /* magenta */
+  --chart-series-6: #008300; /* green */
+  --chart-series-7: #4a3aa7; /* violet */
+  --chart-series-8: #e34948; /* red */
+  /* Chart chrome: de-emphasised marks (context bars, "Other"), hairline
+     grid, and axis rule — recessive so the data carries the ink. */
+  --chart-deemphasis: #c4c4ca;
+  --chart-grid: #ececef;
+  --chart-axis: #d4d4d8;
+
+  /* ── Buttons ── */
+  --btn-primary-bg: var(--accent);
+  --btn-primary-bg-hover: var(--accent-strong);
+  --btn-primary-text: #ffffff;
+  --btn-ghost-bg: var(--hover-surface);
+
+  /* ── Spacing (8px system) ── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 2rem;
+  --space-8: 2.5rem;
+  --space-9: 3rem;
+  --space-10: 4rem;
+
+  /* ── Radius ── */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-pill: 999px;
+
+  /* ── Shadow (subtle; borders do most of the work) ── */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.16);
+
+  /* ── Type scale ── */
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.75rem;
+  --text-kpi: 2rem;
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+
+  --font-display: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  color-scheme: light;
+  font-family: var(--font-body);
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--text);
+  background: var(--bg-deep);
+  font-synthesis: none;
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+:root[data-theme="dark"] {
+  --bg-deep: #09090b;
+  --surface: #0f1115;
+  --surface-muted: #14171c;
+  --surface-3: #181b21;
+  --hover-surface: #1d2128;
+  --panel: #0f1115;
+
+  --line: #272b33;
+  --border-subtle: #1e2229;
+
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+  --text-muted: #71717a;
+  --text-disabled: #52525b;
+
+  --accent: #6366f1;
+  --accent-strong: #818cf8;
+  --accent-soft: rgba(99, 102, 241, 0.14);
+
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+
+  /* ── Chart categorical series (dark-surface steps of the same 8 hues —
+     validated against surface #1a1a19; keep in this fixed order) ── */
+  --chart-series-1: #3987e5;
+  --chart-series-2: #d95926;
+  --chart-series-3: #199e70;
+  --chart-series-4: #c98500;
+  --chart-series-5: #d55181;
+  --chart-series-6: #008300;
+  --chart-series-7: #9085e9;
+  --chart-series-8: #e66767;
+  --chart-deemphasis: #4a4a52;
+  --chart-grid: #23262d;
+  --chart-axis: #34373f;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+
+  color-scheme: dark;
+}

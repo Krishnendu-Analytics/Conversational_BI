@@ -1,0 +1,73 @@
+services:
+  platform-postgres:
+    # pgvector-enabled image for document RAG (Phase 5)
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: bi
+      POSTGRES_PASSWORD: bi
+      POSTGRES_DB: platform
+    ports:
+      - "5434:5432"
+    volumes:
+      - platform_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bi -d platform"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql+psycopg://bi:bi@platform-postgres:5432/platform
+      CORS_ORIGINS: http://localhost:3000
+      REDIS_URL: redis://redis:6379/0
+      # Local compose stays non-production; set APP_ENV=production + EMBEDDING_PROVIDER=openai for prod-like runs
+      APP_ENV: ${APP_ENV:-development}
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-fake}
+    volumes:
+      - ./backend/app:/app/app
+      - ./backend/alembic:/app/alembic
+      - ./backend/alembic.ini:/app/alembic.ini
+      - file_dataset_data:/app/data/file_datasets
+      # Uploaded chat documents (PDF, Word, Excel, images) survive rebuilds.
+      - document_data:/app/data/documents
+    depends_on:
+      platform-postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: >
+      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload  --access-log --log-level info
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      API_PROXY_TARGET: http://api:8000
+    volumes:
+      - ./frontend:/app
+      - web_node_modules:/app/node_modules
+    depends_on:
+      - api
+
+volumes:
+  platform_pg_data:
+  web_node_modules:
+  file_dataset_data:
+  document_data:
